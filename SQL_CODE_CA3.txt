@@ -1,0 +1,206 @@
+create table Customer 
+(
+Cus_id int NOT NULL,
+Cus_Full_name varchar2(30),
+F_name varchar2(20),
+L_name varchar2(20),
+primary key (Cus_id),
+phn_no int
+)
+insert into Customer values(221,'Ram Prakash','Ram','Prakash',897846722)
+insert into Customer values(222,'Narayan Jain','Narayan','Jain',734847762)
+insert into Customer values(223,'Parth Misra','Parth','Misra',846378920)
+insert into Customer values(224,'Kavi Joshi','Kavi','Joshi',893627189)
+insert into Customer values(225,'Hardeep Kaur','Hardeep','Kaur',927384910)
+select * from Customer
+
+create table Vehicle
+(
+V_id int NOT NULL,
+owner_name varchar2(20),
+V_model varchar(20),
+V_type varchar(20) check(V_type in('TWO_WHEELER','FOUR_WHEELER')),
+Cus_phn int,
+p_spot varchar(20),
+primary key (V_id)
+)
+
+insert into Vehicle values(9887,'Ram Prakash','SCORPIO','FOUR_WHEELER',897846722,'A21')
+insert into Vehicle values(6237,'Narayan Jain','DUKE','TWO_WHEELER',734847762,'B61')
+insert into Vehicle values(4556,'Parth Misra','SPLENDER','TWO_WHEELER',846378920,'C33')
+insert into Vehicle values(8345,'Kavi Joshi','HUNDAI','FOUR_WHEELER',893627189,'D01')
+insert into Vehicle values(9033,'Hardeep Kaur','KIA','FOUR_WHEELER',927384910,'E37')
+select * from Vehicle
+drop table vehicle
+
+
+create table Parking
+(
+park_id int NOT NULL,
+p_name varchar2(20),
+p_status char(10) check(p_status in('AV','OC')),
+p_type char(100) check(p_type in('TWO_WHEELER','FOUR_WHEELER')),
+primary key (park_id)
+)  
+
+
+insert into Parking values(401,'A21','AV','TWO_WHEELER') 
+insert into Parking values(501,'B61','AV','FOUR_WHEELER')
+insert into Parking values(603,'C33','OC','FOUR_WHEELER')
+insert into Parking values(704,'D01','AV','TWO_WHEELER')
+insert into Parking values(809,'E37','OC','FOUR_WHEELER')
+select * from parking
+drop table parking
+
+create table Duration
+(
+du_id int NOT NULL,
+d_time varchar(30),
+par_at_name varchar2(20),
+primary key (du_id)
+)
+
+insert into Duration values (321,'06:45:10','A21')
+insert into Duration values (322,'04:32:10','B61')
+insert into Duration values (323,'02:41:55','C33')
+insert into Duration values (324,'05:53:08','D01')
+insert into Duration values (325,'02:47:28','E37')
+select * from duration
+
+
+create table Token
+(
+Token_id int NOT NULL,
+Veh_reg int NOT NULL,
+Entry_time varchar2(30),
+Exit_time varchar2(30),
+Bill_amnt varchar2(20),
+parking_name varchar2(20),
+foreign key (Veh_reg) references Vehicle (V_id),
+primary key (Token_id)
+)
+insert into Token values(23,9887,'10:11:18','12:10:01',1500,'A21')
+insert into Token values(24,6237,'14:54:39','16:22:15',1250,'B61')
+insert into Token values(25,4556,'19:18:27','21:10:20',850,'C33')
+insert into Token values(26,8345,'02:37:49','05:40:41',980,'D01')
+insert into Token values(27,9033,'18:13:00','22:44:12',1330,'E37')
+select * from token
+drop table token
+
+create table Violation
+( 
+D_name varchar2(100) NOT NULL,
+Fine int,
+Vio_id int,
+Car_no int,
+Model varchar2(100),
+par_id int,
+Veh_reg int,
+primary key (Vio_id),
+foreign key (par_id) references Parking (park_id),
+foreign key (Veh_reg) references Vehicle (V_id)
+)
+
+insert into Violation values ('Ram Prakash',200,101,2245,'SCORPIO',401,9887)
+insert into Violation values ('Narayan Jain',280,102,4555,'DUKE',501,6237)
+insert into Violation values ('Parth Misra',300,103,1857,'SPLENDER',603,4556)
+insert into Violation values ('Kavi Joshi',440,104,7445,'HUNDAI',704,8345)
+insert into Violation values ('Hardeep Kaur',440,105,7445,'KIA',809,9033)
+select * from violation
+drop table violation
+
+
+create table Empl_Park
+(
+emp_id int NOT NULL,
+emp_name varchar2(20),
+f_name varchar2(20),
+l_name varchar2(20),
+sex char check (sex in('M','F')),
+primary key (emp_id)
+)
+insert into Empl_Park values(654,'Jaya Narang','Jaya','Narang','F')
+insert into Empl_Park values(721,'Mohit Das','Mohit','Das','M')
+insert into Empl_Park values(877,'Indu Sharma','Indu','Sharma','F')
+insert into Empl_Park values(543,'Dev Yadav','Dev','Yadav','M')
+select * from empl_park
+
+
+
+
+--DML QUERIES
+--1)Normal Select Statement
+select * from Violation where Vio_id=103 
+
+--2)Every Distinct Element present In Table
+select distinct Token_id from token
+
+--3)Inserting values
+insert into Empl_Park values(721,'Mohit Das','Mohit','Das','M')
+insert into Violation values ('Kavi Joshi',440,104,7445,'HUNDAI',704,8345)
+insert into Token values(25,4556,'19:18:27','21:10:20',850,'C33')
+
+--4)Max/Min/Avg Values in the table 
+select max(Fine) from violation 
+select min(bill_amnt) from token
+select avg(fine) from violation
+
+--5)Update Data in Row
+update token set bill_amnt=1000 where token_id=25 
+select * from token  --new data is visible
+
+--6)Deleting data from whole row in given table
+delete from Violation where Vio_id=103
+
+
+
+--DDL QUERIES
+--1)Add new column to previously existing table 
+alter table customer add cus_email varchar2(40)
+
+--2)Now deleting the extra column which we previously added
+alter table customer drop  column cus_email
+
+--3) Truncate table
+truncate table Empl_park    
+
+--4)Renaming table
+rename table Empl_park to Empl_table
+
+--5)Drop table
+drop table Empl_table 
+
+
+--SOME MORE QUERIES 
+--1)Name the customer who has a four wheeler vehicle and is not currently parking his vehicle
+select owner_name from vehicle where p_spot =(select p_name from parking where p_status='AV' AND p_type='FOUR_WHEELER')
+
+--2)print the data of customer with fine 
+select d_name,fine,Vio_id,Car_no,Model from violation left join customer on violation.d_name=customer.cus_full_name
+
+--3)print duration time for each vehicle 
+select token.Veh_reg,token.entry_time,token.exit_time,vehicle.v_model,vehicle.v_type from token right join vehicle on token.veh_reg=vehicle.v_id
+
+
+--PLSQL QUERY
+
+declare
+tax Violation.fine%type;
+amt Token.bill_amnt%type;
+name customer.cus_full_name%type;
+vio violation.vio_id%type;
+car violation.car_no%type;
+modei violation.model%type;
+begin
+select fine into tax from Violation where D_name=(select Cus_full_name from Customer where cus_id=221);
+select bill_amnt into amt from Token where veh_reg=(select V_id from Vehicle where V_id=9887);
+select cus_full_name into name from customer where cus_id=221;
+select vio_id into vio from Violation where veh_reg=9887;
+select car_no into car from Violation where veh_reg=9887;
+select model into modei from Violation where veh_reg=9887;
+dbms_output.put_line('Hello!'||' '||name);
+dbms_output.put_line('your total tax is:'||' '||(tax+amt)||'/-');
+dbms_output.put_line('of Violation Id:'||' '||vio);
+dbms_output.put_line('Car Number:'||' '||car);
+dbms_output.put_line('Car Model:'||' '||modei);
+end;
